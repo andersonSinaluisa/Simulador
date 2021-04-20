@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Basic Table</h4>
+                <p class="card-description"> Add class <code>.table</code> </p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Permisos</th>
+                            <th>Codigo</th>
+                            <th>Modelo</th> 
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in obj %}
+                        <tr>
+
+                        {% ifchanged item.group.name %}
+                            <td rowspan="{{item|length}}">{{ item.group.name }}</td>
+                        {% endifchanged %}
+                        <td>{{ item.permission.name }}</td>
+                        <td>
+                            <label class="badge badge-primary">{{item.permission.content_type.app_label}}.{{item.permission.codename}}</label>
+                        </td>
+                        <td>
+                        {{item.permission.content_type.model}}
+                        <td>
+                        </tr>
+                        
+                        {% endfor %}
+                        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

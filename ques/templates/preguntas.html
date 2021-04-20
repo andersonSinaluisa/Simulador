@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+<div class="row">
+    <form id="formulario">
+        <div class="col-lg-8 grid-margin stretch-card">
+        </div>
+        
+        <div class="col-lg-4 grid-margin stretch-card">
+            <button  class="btn btn-primary" type="submit">Enviar</button>
+        </div>
+    {% for item in lista %}
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{forloop.counter}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{item|first}}</h6>
+                {% for a in item|last %}
+                <div class="input-group">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="correctas" id="{{a.id_respuesta}}" data-id="{{a.id_pregunta.id_pregunta}}" {% if a.correcta %}checked{% endif %}>
+                    <label class="form-check-label" for="{{a.id_respuesta}}">
+                        {{a.descripcion}}
+                    </label>
+                </div>
+            </div>
+
+                {% endfor %}
+            </div>
+
+        </div>
+    </div>
+    {% endfor %}
+    <form>
+</div>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+    $( "#formulario" ).submit(function( event ) {
+     event.preventDefault();
+     lista = []
+     
+     event.target.correctas.forEach(element => {
+         if(element.checked){
+            
+            lista.push(element.id)
+         }
+         
+    });
+    console.log(lista)
+    var token = '{{ csrf_token }}';
+
+    $.ajax({
+        url :"{% url 'ques:marcar_respuesta' %}",
+        headers: {
+                    "X-CSRFToken": token
+                },
+        type:'POST',
+        data: {'lista':JSON.stringify(lista)},
+        success:function(r){
+            console.log(r)
+        }
+    })
+    
+
+ });
+ </script>  
+    
+{% endblock script %}
